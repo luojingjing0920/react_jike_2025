@@ -14,9 +14,6 @@ cd react-jike
 # 启动项目
 npm start
 ```
-
-![image.png](assets/01.png)
-
 ## 调整项目目录结构 
 
 ```bash
@@ -30,49 +27,15 @@ npm start
   -App.js         根组件
   -index.css      全局样式
   -index.js       项目入口
-```
-
-`src/index.js`
-
-```jsx
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import './index.scss'
-import './App.js'
-
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <App/>
-  </React.StrictMode>
-)
-```
-`src/App.js`
-```jsx
-const App = () => {
-  return <div>this is app</div>
-}
-
-export default App
-```
 
 # 使用scss预处理器
 
 > `SASS` 是一种预编译的 CSS，支持一些比较高级的语法，可以提高编写样式的效率，CRA接入scss非常简单只需要我们装一个sass工具
 
-
 **实现步骤**
 
 1.  安装解析 sass 的包：`npm i sass -D` 
 2.  创建全局样式文件：`index.scss` 
-
-```css
-body {
-  margin: 0;
-  div {
-    color: blue;
-  }
-}
-```
 
 # 组件库antd使用
 
@@ -88,17 +51,6 @@ body {
 **测试Button**
 `pages/Login/index.jsx`
 
-```jsx
-import { Button } from 'antd'
-
-const Login = () => {
-  return <div>this is login<Button type='primary'>test</Button></div>
-}
-export default Login
-```
-
-![image.png](assets/02.png)
-
 # 配置基础路由
 
 > 单页应用需要对应的路由支持，我们使用 `react-router-dom` 最新版本
@@ -112,57 +64,11 @@ export default Login
 **代码实现**
 `pages/Layout/index.js`
 
-```jsx
-const Layout = () => {
-  return <div>this is layout</div>
-}
-export default Layout
-```
-
 `pages/Login/index.js`
-
-```jsx
-const Login = () => {
-  return <div>this is login</div>
-}
-export default Login
-```
 
 `router/index.js`
 
-```jsx
-import { createBrowserRouter } from 'react-router-dom'
-
-import Login from '../pages/Login'
-import Layout from '../pages/Layout'
-
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Layout />,
-  },
-  {
-    path: '/login',
-    element: <Login />,
-  },
-])
-
-export default router
-```
-
 `index.js`
-
-```jsx
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import './index.scss'
-import router from './router'
-import { RouterProvider } from 'react-router-dom'
-
-ReactDOM.createRoot(document.getElementById('root')).render(
-    <RouterProvider router={router} />
-)
-```
 
 # 配置别名路径
 
@@ -179,50 +85,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 npm i @craco/craco -D
 ```
 
-```javascript
-const path = require('path')
-
-module.exports = {
-  // webpack 配置
-  webpack: {
-    // 配置别名
-    alias: {
-      // 约定：使用 @ 表示 src 文件所在路径
-      '@': path.resolve(__dirname, 'src')
-    }
-  }
-}
-```
-
-```json
-"scripts": {
-  "start": "craco start",
-  "build": "craco build",
-  "test": "craco test",
-  "eject": "react-scripts eject"
-}
-```
-
-```javascript
-import { createBrowserRouter } from 'react-router-dom'
-
-import Login from '@/pages/Login'
-import Layout from '@/pages/Layout'
-
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Layout />,
-  },
-  {
-    path: '/login',
-    element: <Login />,
-  },
-])
-
-export default router
-```
-
 ## VsCode提示配置
 
 **实现步骤**
@@ -232,19 +94,113 @@ export default router
 
 **代码实现**
 
-```json
-{
-  "compilerOptions": {
-    "baseUrl": "./",
-    "paths": {
-      "@/*": ["src/*"]
-    }
-  }
-}
-```
-
 :::warning
 说明：VSCode会自动读取`jsconfig.json` 中的配置，让vscode知道@就是src目录
 :::
 
 # 使用gitee管理项目
+
+# 基本结构搭建
+
+**实现步骤**
+
+1. 在 `Login/index.js` 中创建登录页面基本结构
+2. 在 Login 目录中创建 index.scss 文件，指定组件样式
+3. 将 `logo.png` 和 `login.png` 拷贝到 assets 目录中
+
+**代码实现**
+`pages/Login/index.js`
+
+`pages/Login/index.scss`
+
+# 表单校验实现
+
+**实现步骤**
+
+1. 为 Form 组件添加 `validateTrigger` 属性，指定校验触发时机的集合
+2. **为 Form.Item 组件添加 name 属性**
+3. 为 Form.Item 组件添加 `rules` 属性，用来添加表单校验规则对象
+
+**代码实现**
+`page/Login/index.js`
+
+# 获取登录表单数据
+
+**实现步骤**
+
+1. 为 Form 组件添加 `onFinish` 属性，该事件会在点击登录按钮时触发
+2. 创建 onFinish 函数，通过函数参数 values 拿到表单值
+3. Form 组件添加 `initialValues` 属性，来初始化表单值
+
+**代码实现**
+`pages/Login/index.js`
+
+# 封装request工具模块
+
+> 业务背景: 前端需要和后端拉取接口数据，axios是使用最广的工具插件，针对于项目中的使用，我们需要做一些简单的封装
+
+**实现步骤**
+
+1. 安装 axios 到项目  
+2. 创建 utils/request.js 文件
+3. 创建 axios 实例，配置 `baseURL，请求拦截器，响应拦截器` 
+4. 在 utils/index.js 中，统一导出request
+
+```bash
+npm i axios
+```
+
+# 使用Redux管理token
+
+## 安装Redux相关工具包
+
+```bash
+npm i react-redux @reduxjs/toolkit
+```
+
+## 配置Redux
+
+# 实现登录逻辑
+
+> 业务逻辑：
+>
+> 1. 跳转到首页
+> 2. 提示用户登录成功
+
+# token持久化
+
+> 业务背景: Token数据具有一定的时效时间，通常在几个小时，有效时间内无需重新获取，而基于Redux的存储方式又是基于内存的，刷新就会丢失，为了保持持久化，我们需要单独做处理
+
+## 封装存取方法
+
+## 实现持久化逻辑
+
+刷新浏览器，通过Redux调试工具查看token数据
+
+# 请求拦截器注入token
+
+> 业务背景: Token作为用户的数据标识，在接口层面起到了接口权限控制的作用，也就是说后端有很多接口都需要通过查看当前请求头信息中是否含有token数据，来决定是否正常返回数据
+
+
+> 拼接方式：config.headers.Authorization = `Bearer ${token}}`
+
+
+`utils/request.js`
+
+# 路由鉴权实现
+
+> 业务背景：封装 `AuthRoute` 路由鉴权高阶组件，实现未登录拦截，并跳转到登录页面
+> 实现思路：判断本地是否有token，如果有，就返回子组件，否则就重定向到登录Login
+
+
+**实现步骤**
+
+1. 在 components 目录中，创建 `AuthRoute/index.jsx` 文件
+2. 登录时，直接渲染相应页面组件
+3. 未登录时，重定向到登录页面
+4. 将需要鉴权的页面路由配置，替换为 AuthRoute 组件渲染
+
+**代码实现**
+`components/AuthRoute/index.jsx`
+
+`src/router/index.jsx`
