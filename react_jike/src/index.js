@@ -1,10 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { RouterProvider } from 'react-router-dom'
-import './index.scss'
-import router from './router'
 import { Provider } from 'react-redux'
+import 'normalize.css'
+import router from './router'
 import store from './store'
+import './index.scss'
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
