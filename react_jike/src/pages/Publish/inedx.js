@@ -7,7 +7,8 @@ import {
     Input,
     Upload,
     Space,
-    Select
+    Select,
+    message
 } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
@@ -22,28 +23,30 @@ const { Option } = Select
 
 const Publish = () => {
     //获取频道列表
-    const[channelList,setChannelList ] = useState([])
+    const [channelList, setChannelList] = useState([])
 
-    useEffect(()=>{
+    useEffect(() => {
         //1.封装函数 在函数体内调用接口
-        const getChannelList = async ()=>{
+        const getChannelList = async () => {
             const res = await getChannelAPI()
             setChannelList(res.data.channels)
         }
         //2.调用函数
         getChannelList()
-    },[])
+    }, [])
 
     //提交表单
-    const onFinish = (formValue) =>{
-        const {title, content,channel_id} = formValue
+    const onFinish = (formValue) => {
+        //校验封面类型imageType是否和实际的图片列表imageList数量相等
+        if(imageList.length !== imageType) return message.warning('封面类型和图片数量不匹配')
+        const { title, content, channel_id } = formValue
         //1.按照接口表单文档的格式处理收集的表单数据
         const reqData = {
             title,
             content,
-            cover:{
-                type:0,
-                images:[]
+            cover: {
+                type: imageType,//封面模式
+                images: imageList.map(item => item.response.data.url) //图片列表
             },
             channel_id
         }
@@ -52,14 +55,14 @@ const Publish = () => {
     }
 
     //上传回调
-    const [imageList,setimageList] = useState([])
-    const onChange=(value)=>{
+    const [imageList, setimageList] = useState([])
+    const onChange = (value) => {
         setimageList(value.fileList)
     }
 
     //切换图片封面类型
-    const [imageType,setImageType] = useState(0)
-    const onTypeChange = (e)=>{
+    const [imageType, setImageType] = useState(0)
+    const onTypeChange = (e) => {
         setImageType(e.target.value)
     }
     return (
@@ -93,7 +96,7 @@ const Publish = () => {
                     >
                         <Select placeholder="请选择文章频道" style={{ width: 400 }}>
                             {/* value属性用户选中之后会自动收集起来作为接口的提交字段 */}
-                            {channelList.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)} 
+                            {channelList.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                         </Select>
                     </Form.Item>
 
@@ -121,7 +124,7 @@ const Publish = () => {
                                 <PlusOutlined />
                             </div>
                         </Upload>}
-                        
+
                     </Form.Item>
 
                     <Form.Item
