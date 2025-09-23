@@ -14,7 +14,6 @@ import { PlusOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
-
 import './index.scss'
 import {useState } from 'react'
 import { createArticleAPI } from '@/apis/article'
@@ -56,6 +55,8 @@ const Publish = () => {
     const onTypeChange = (e) => {
         setImageType(e.target.value)
     }
+
+
     return (
         <div className="publish">
             <Card
